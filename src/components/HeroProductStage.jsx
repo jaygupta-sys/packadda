@@ -189,30 +189,6 @@ export default function HeroProductStage({
           </AnimatePresence>
         </div>
       </motion.div>
-
-      {/* Mobile Interactive Product Switcher Bar */}
-      <div className="mobile-product-bar" aria-label="Explore packaging categories">
-        <div className="mobile-bar-label">
-          <span>Tap to inspect packaging:</span>
-        </div>
-        <div className="mobile-chips-scroll">
-          {PRODUCTS.map((prod) => (
-            <button
-              key={prod.id}
-              type="button"
-              className={`mobile-product-chip ${
-                hoveredProductId === prod.id ? 'active' : ''
-              }`}
-              onClick={() => {
-                setHoveredProductId(prod.id);
-                onSelectProduct(prod);
-              }}
-            >
-              <span>{prod.title}</span>
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

@@ -2,32 +2,39 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Plus } from 'lucide-react';
 import HeroCTA from './HeroCTA';
-import { TRUST_METRICS } from '../data/products';
+import HeroVideoSlot from './HeroVideoSlot';
+import { TRUST_METRICS, PRODUCTS } from '../data/products';
 
-export default function HeroContent({ onOpenQuote, onExploreWork }) {
+export default function HeroContent({
+  onOpenQuote,
+  onExploreWork,
+  selectedProductId,
+  onSelectProduct,
+  onHoverProduct
+}) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.15
+        staggerChildren: 0.08,
+        delayChildren: 0.1
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 22 },
+    hidden: { opacity: 0, y: 14 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
   return (
     <motion.div
-      className="hero-content-col"
+      className="hero-content-section"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -38,27 +45,22 @@ export default function HeroContent({ onOpenQuote, onExploreWork }) {
         <span className="hero-eyebrow-line" aria-hidden="true" />
       </motion.div>
 
-      {/* Main Editorial Headline */}
+      {/* Main Editorial Headline - Compact, 2 Powerful Lines */}
       <motion.h1 className="hero-headline" variants={itemVariants}>
-        <span className="headline-line">PACKAGING</span>
-        <span className="headline-line">THAT MAKES</span>
-        <span className="headline-line accent-text">YOUR BRAND</span>
-        <span className="headline-line">STAND OUT.</span>
+        <span className="headline-line">PACKAGING THAT MAKES</span>
+        <span className="headline-line">
+          <span className="accent-text">YOUR BRAND</span> STAND OUT.
+        </span>
       </motion.h1>
 
-      {/* Supporting Text */}
-      <motion.p className="hero-supporting-text" variants={itemVariants}>
-        Custom boxes, paper bags, cards, stickers and packaging made around your brand.
-      </motion.p>
-
-      {/* Primary & Secondary Call-To-Action */}
-      <motion.div className="hero-cta-wrapper" variants={itemVariants}>
-        <HeroCTA onOpenQuote={onOpenQuote} onExploreWork={onExploreWork} />
+      {/* Cinematic Showcase Video Reel - TALL, PROMINENT, IMMERSIVE */}
+      <motion.div className="hero-video-slot-container" variants={itemVariants}>
+        <HeroVideoSlot videoSrc="/hero video.mp4" onExplore={onExploreWork} />
       </motion.div>
 
-      {/* Trust & Performance Metrics Strip */}
-      <motion.div className="hero-proof-section" variants={itemVariants}>
-        {/* Metric Dividers */}
+      {/* Trust Badging: Directly after Video */}
+      <motion.div className="proof-side-block hero-trust-strip" variants={itemVariants}>
+        {/* 3 Metrics: 1K+ | Custom | Pan India */}
         <div className="proof-metrics-grid">
           {TRUST_METRICS.map((metric, idx) => (
             <div key={metric.label} className="proof-metric-item">
@@ -71,7 +73,7 @@ export default function HeroContent({ onOpenQuote, onExploreWork }) {
           ))}
         </div>
 
-        {/* Social Proof & Rating Strip */}
+        {/* Social Proof Review Strip */}
         <div className="proof-review-strip">
           <div className="avatar-stack" aria-hidden="true">
             <span className="avatar-circle av-1">
@@ -105,6 +107,41 @@ export default function HeroContent({ onOpenQuote, onExploreWork }) {
               <span className="review-score">4.9/5 (Google Reviews)</span>
             </div>
           </div>
+        </div>
+      </motion.div>
+
+      {/* Primary & Secondary Call-To-Action */}
+      <motion.div className="hero-cta-wrapper" variants={itemVariants}>
+        <HeroCTA onOpenQuote={onOpenQuote} onExploreWork={onExploreWork} />
+      </motion.div>
+
+      {/* Chips Bar: TAP TO INSPECT PACKAGING */}
+      <motion.div className="hero-inspect-chips-container" variants={itemVariants}>
+        <div className="inspect-chips-label">
+          <span>TAP TO INSPECT PACKAGING:</span>
+        </div>
+        <div className="inspect-chips-scroll" role="tablist" aria-label="Inspect packaging types">
+          {PRODUCTS.map((prod) => {
+            const isActive = selectedProductId === prod.id;
+            return (
+              <button
+                key={prod.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={`inspect-chip-button ${isActive ? 'active' : ''}`}
+                onClick={() => {
+                  if (onHoverProduct) onHoverProduct(prod.id);
+                  if (onSelectProduct) onSelectProduct(prod);
+                }}
+                onMouseEnter={() => {
+                  if (onHoverProduct) onHoverProduct(prod.id);
+                }}
+              >
+                <span>{prod.title}</span>
+              </button>
+            );
+          })}
         </div>
       </motion.div>
     </motion.div>

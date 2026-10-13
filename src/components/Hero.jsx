@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import HeroNavbar from './HeroNavbar';
+import HeroVideoSlot from './HeroVideoSlot';
 import HeroContent from './HeroContent';
 import HeroProductStage from './HeroProductStage';
 import QuoteModal from './QuoteModal';
@@ -34,18 +35,21 @@ export default function Hero() {
 
   return (
     <section className="hero-section" id="hero">
-      {/* Top Navbar */}
+      {/* Top Navbar with prominently visible logo */}
       <HeroNavbar onOpenQuote={() => handleOpenQuote()} />
 
-      {/* Main Hero Viewport Split */}
+      {/* Hero Body Container */}
       <div className="hero-main-container">
-        {/* Left Side: 45% Typography & CTAs */}
+        {/* Main Hero Showcase: Headline, Video, Trust Strip & CTAs */}
         <HeroContent
           onOpenQuote={() => handleOpenQuote()}
           onExploreWork={handleExploreWork}
+          selectedProductId={selectedProduct?.id || hoveredProductId}
+          onSelectProduct={handleSelectProduct}
+          onHoverProduct={(id) => setHoveredProductId(id)}
         />
 
-        {/* Right Side: 55% Art-Directed Packaging Product Stage */}
+        {/* 3. Uske Niche: Interactive Packaging Stage */}
         <HeroProductStage
           onSelectProduct={handleSelectProduct}
           hoveredProductId={hoveredProductId}
@@ -82,7 +86,7 @@ export default function Hero() {
               transition={{ duration: 0.18 }}
             >
               <span className="scroll-pill-line" />
-              <span className="scroll-text">Hover any piece — select it to open its category</span>
+              <span className="scroll-text">Tap or hover any packaging piece to inspect details</span>
             </motion.div>
           )}
         </AnimatePresence>
