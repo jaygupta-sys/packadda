@@ -55,10 +55,10 @@ export default function HeroContent({
   onSelectProduct
 }) {
   const [activeCat, setActiveCat] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
   const stageRef = useRef(null);
-  const chipsScrollRef = useRef(null);
   const reducedMotion = usePrefersReducedMotion();
 
   const currentCat = HERO_CATEGORIES[activeCat];
@@ -70,8 +70,8 @@ export default function HeroContent({
   const smoothMouseX = useSpring(mouseX, springConfig);
   const smoothMouseY = useSpring(mouseY, springConfig);
 
-  const rotateX = useTransform(smoothMouseY, [0, 1], reducedMotion ? [0, 0] : [2.5, -2.5]);
-  const rotateY = useTransform(smoothMouseX, [0, 1], reducedMotion ? [0, 0] : [-3, 3]);
+  const rotateX = useTransform(smoothMouseY, [0, 1], reducedMotion ? [0, 0] : [2, -2]);
+  const rotateY = useTransform(smoothMouseX, [0, 1], reducedMotion ? [0, 0] : [-2.5, 2.5]);
 
   const handleMouseMove = (e) => {
     if (reducedMotion || !stageRef.current) return;
@@ -99,7 +99,7 @@ export default function HeroContent({
     const diffY = touchStartY.current - e.changedTouches[0].clientY;
 
     // Only swipe if horizontal move was greater than vertical move
-    if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+    if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
       if (diffX > 0 && activeCat < HERO_CATEGORIES.length - 1) {
         handleSelectCategory(activeCat + 1);
       } else if (diffX < 0 && activeCat > 0) {
@@ -111,44 +111,73 @@ export default function HeroContent({
   };
 
   const handleSelectCategory = (idx) => {
+    if (idx === activeCat) return;
+    setDirection(idx > activeCat ? 1 : -1);
     setActiveCat(idx);
-    // Smooth scroll chip into view in selector strip
-    if (chipsScrollRef.current) {
-      const chipButtons = chipsScrollRef.current.querySelectorAll('.hero-cat-chip');
-      if (chipButtons[idx]) {
-        chipButtons[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    }
   };
 
-  const goNext = () => {
+  const goNext = (e) => {
+    if (e) e.stopPropagation();
     if (activeCat < HERO_CATEGORIES.length - 1) {
-      handleSelectCategory(activeCat + 1);
+      setDirection(1);
+      setActiveCat((p) => p + 1);
     }
   };
 
-  const goPrev = () => {
+  const goPrev = (e) => {
+    if (e) e.stopPropagation();
     if (activeCat > 0) {
-      handleSelectCategory(activeCat - 1);
+      setDirection(-1);
+      setActiveCat((p) => p - 1);
     }
   };
 
-  const dur = reducedMotion ? 0 : 0.6;
+  const dur = reducedMotion ? 0 : 0.55;
   const ease = [0.16, 1, 0.3, 1];
+
+  /* 3D Slide & Float Variants for Product Transition */
+  const slideVariants = {
+    enter: (dir) => ({
+      x: reducedMotion ? 0 : dir > 0 ? 90 : -90,
+      opacity: 0,
+      scale: reducedMotion ? 1 : 0.94,
+      rotateY: reducedMotion ? 0 : dir > 0 ? 6 : -6
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      rotateY: 0,
+      transition: {
+        duration: reducedMotion ? 0 : 0.42,
+        ease
+      }
+    },
+    exit: (dir) => ({
+      x: reducedMotion ? 0 : dir > 0 ? -90 : 90,
+      opacity: 0,
+      scale: reducedMotion ? 1 : 0.94,
+      rotateY: reducedMotion ? 0 : dir > 0 ? -6 : 6,
+      transition: {
+        duration: reducedMotion ? 0 : 0.24,
+        ease: 'easeIn'
+      }
+    })
+  };
 
   const containerV = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: reducedMotion ? 0 : 0.08,
-        delayChildren: reducedMotion ? 0 : 0.04
+        staggerChildren: reducedMotion ? 0 : 0.06,
+        delayChildren: reducedMotion ? 0 : 0.02
       }
     }
   };
 
   const fadeUpV = {
-    hidden: { opacity: 0, y: reducedMotion ? 0 : 16 },
+    hidden: { opacity: 0, y: reducedMotion ? 0 : 12 },
     visible: { opacity: 1, y: 0, transition: { duration: dur, ease } }
   };
 
@@ -160,191 +189,158 @@ export default function HeroContent({
       animate="visible"
     >
       {/* ======================================================
-          1. PRODUCT VISUAL FIRST (Mobile-first order & desktop visual stage)
+          FIRST FOLD CONTENT WRAPPER:
+          Fits 100% inside mobile viewport without scrolling!
           ====================================================== */}
-      <motion.div className="hero-product-showcase" variants={fadeUpV}>
-        <motion.div
-          ref={stageRef}
-          className="hero-product-stage-card"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          style={{
-            perspective: 1000,
-            rotateX,
-            rotateY
-          }}
-        >
-          {/* Subtle warm luxury ambient glow */}
-          <div className="hero-product-glow" aria-hidden="true" />
-
-          {/* Layered secondary visual composition element */}
-          <div className="hero-product-layered-backdrop" aria-hidden="true" />
-
-          {/* Primary Featured Product Visual with floating motion */}
-          <div className="hero-product-img-wrapper">
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={currentCat.id}
-                src={currentCat.image}
-                alt={`Pack Adda ${currentCat.label} custom printing`}
-                className="hero-product-featured-img"
-                draggable={false}
-                loading="eager"
-                fetchPriority="high"
-                initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.94, y: reducedMotion ? 0 : 14 }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  y: 0,
-                  transition: { duration: reducedMotion ? 0 : 0.45, ease }
-                }}
-                exit={{
-                  opacity: 0,
-                  scale: 0.96,
-                  y: -10,
-                  transition: { duration: 0.2 }
-                }}
-              />
-            </AnimatePresence>
-          </div>
-
-          {/* Category label badge */}
-          <div className="hero-product-cat-badge">
-            <span className="cat-badge-dot" />
-            <span className="cat-badge-label">{currentCat.label}</span>
-          </div>
-
-          {/* Left / Right touch & click navigation arrows */}
-          <button
-            type="button"
-            className="hero-product-nav-btn hero-product-nav-prev"
-            onClick={goPrev}
-            disabled={activeCat === 0}
-            aria-label="Previous packaging product"
+      <div className="hero-first-fold-group">
+        {/* 1. LARGE LUXURY PRODUCT VISUAL CARD WITH INTEGRATED TABS */}
+        <motion.div className="hero-product-showcase" variants={fadeUpV}>
+          <motion.div
+            ref={stageRef}
+            className="hero-product-stage-card"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            style={{
+              perspective: 1000,
+              rotateX,
+              rotateY
+            }}
           >
-            <ChevronLeft size={18} strokeWidth={2.5} />
-          </button>
-          <button
-            type="button"
-            className="hero-product-nav-btn hero-product-nav-next"
-            onClick={goNext}
-            disabled={activeCat === HERO_CATEGORIES.length - 1}
-            aria-label="Next packaging product"
-          >
-            <ChevronRight size={18} strokeWidth={2.5} />
-          </button>
+            {/* Ambient luxury warm radial glow */}
+            <div className="hero-product-glow" aria-hidden="true" />
+
+            {/* Layered subtle framing accent for depth */}
+            <div className="hero-product-layered-backdrop" aria-hidden="true" />
+
+            {/* Primary Featured Product Visual with 3D Slide & Floating Motion */}
+            <div className="hero-product-img-wrapper">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.img
+                  key={currentCat.id}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  src={currentCat.image}
+                  alt={`Pack Adda ${currentCat.label} custom printing`}
+                  className="hero-product-featured-img"
+                  draggable={false}
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </AnimatePresence>
+            </div>
+
+            {/* Top-Left Category Badge */}
+            <div className="hero-product-cat-badge">
+              <span className="cat-badge-dot" />
+              <span className="cat-badge-label">{currentCat.label}</span>
+            </div>
+
+            {/* Navigation Arrows (< and >) */}
+            <button
+              type="button"
+              className="hero-product-nav-btn hero-product-nav-prev"
+              onClick={goPrev}
+              disabled={activeCat === 0}
+              aria-label="Previous packaging product"
+            >
+              <ChevronLeft size={18} strokeWidth={2.5} />
+            </button>
+            <button
+              type="button"
+              className="hero-product-nav-btn hero-product-nav-next"
+              onClick={goNext}
+              disabled={activeCat === HERO_CATEGORIES.length - 1}
+              aria-label="Next packaging product"
+            >
+              <ChevronRight size={18} strokeWidth={2.5} />
+            </button>
+
+            {/* Integrated Minimalist Floating Category Tabs directly INSIDE the card */}
+            <div className="hero-stage-floating-tabs" role="tablist" aria-label="Select packaging category">
+              {HERO_CATEGORIES.map((cat, idx) => {
+                const isActive = idx === activeCat;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`stage-floating-tab ${isActive ? 'active' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectCategory(idx);
+                    }}
+                  >
+                    <span>{cat.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* Category Dot Indicators */}
-        <div className="hero-product-dots" role="tablist" aria-label="Product categories">
-          {HERO_CATEGORIES.map((cat, idx) => (
-            <button
-              key={cat.id}
+        {/* 2. HEADLINE & SUPPORTING TEXT */}
+        <motion.div className="hero-text-block" variants={fadeUpV}>
+          {/* Eyebrow */}
+          <div className="hero-eyebrow-wrapper">
+            <span className="hero-eyebrow-text">CUSTOM PACKAGING &amp; PRINTING</span>
+            <span className="hero-eyebrow-line" aria-hidden="true" />
+          </div>
+
+          {/* Headline: Packaging that makes YOUR BRAND stand out. */}
+          <h1 className="hero-headline">
+            <span className="headline-line">PACKAGING THAT MAKES</span>
+            <span className="headline-line">
+              <span className="accent-text">YOUR BRAND</span> STAND OUT.
+            </span>
+          </h1>
+
+          {/* Supporting text */}
+          <p className="hero-supporting-text">
+            Custom boxes, paper bags, cards and stickers made for your brand.
+          </p>
+        </motion.div>
+
+        {/* 3. CTA BUTTONS (Min 48px touch height, Orange primary) */}
+        <motion.div className="hero-cta-wrapper" variants={fadeUpV}>
+          <div className="hero-cta-group">
+            <motion.button
               type="button"
-              role="tab"
-              aria-selected={idx === activeCat}
-              className={`hero-dot ${idx === activeCat ? 'active' : ''}`}
-              onClick={() => handleSelectCategory(idx)}
-              aria-label={`Show ${cat.label}`}
-            />
-          ))}
-        </div>
-      </motion.div>
+              className="btn-quote-primary"
+              onClick={onOpenQuote}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.18, ease }}
+              aria-label="Get a custom packaging quote"
+            >
+              <span>Get a Quote</span>
+              <ArrowUpRight className="cta-icon-primary" size={18} strokeWidth={2.4} />
+            </motion.button>
+
+            <motion.button
+              type="button"
+              className="btn-explore-secondary"
+              onClick={onExploreWork}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.18, ease }}
+              aria-label="Explore Pack Adda products"
+            >
+              <span className="btn-text">Explore Products</span>
+              <ArrowUpRight size={16} strokeWidth={2.2} className="explore-arrow" />
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
 
       {/* ======================================================
-          2. HEADLINE & SUPPORTING TEXT
-          ====================================================== */}
-      <motion.div className="hero-text-block" variants={fadeUpV}>
-        {/* Eyebrow */}
-        <div className="hero-eyebrow-wrapper">
-          <span className="hero-eyebrow-text">CUSTOM PACKAGING &amp; PRINTING</span>
-          <span className="hero-eyebrow-line" aria-hidden="true" />
-        </div>
-
-        {/* Headline: Packaging that makes YOUR BRAND stand out. */}
-        <h1 className="hero-headline">
-          <span className="headline-line">PACKAGING THAT MAKES</span>
-          <span className="headline-line">
-            <span className="accent-text">YOUR BRAND</span> STAND OUT.
-          </span>
-        </h1>
-
-        {/* Supporting text */}
-        <p className="hero-supporting-text">
-          Custom boxes, paper bags, cards and stickers made for your brand.
-        </p>
-      </motion.div>
-
-      {/* ======================================================
-          3. CTA BUTTONS (Min 48px touch height, Orange primary)
-          ====================================================== */}
-      <motion.div className="hero-cta-wrapper" variants={fadeUpV}>
-        <div className="hero-cta-group">
-          <motion.button
-            type="button"
-            className="btn-quote-primary"
-            onClick={onOpenQuote}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.18, ease }}
-            aria-label="Get a custom packaging quote"
-          >
-            <span>Get a Quote</span>
-            <ArrowUpRight className="cta-icon-primary" size={19} strokeWidth={2.4} />
-          </motion.button>
-
-          <motion.button
-            type="button"
-            className="btn-explore-secondary"
-            onClick={onExploreWork}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.18, ease }}
-            aria-label="Explore Pack Adda products"
-          >
-            <span className="btn-text">Explore Products</span>
-            <ArrowUpRight size={17} strokeWidth={2.2} className="explore-arrow" />
-          </motion.button>
-        </div>
-      </motion.div>
-
-      {/* ======================================================
-          4. SWIPEABLE CATEGORY SELECTOR STRIP (Touch / Swipe)
-          ====================================================== */}
-      <motion.div className="hero-cat-selector-wrapper" variants={fadeUpV}>
-        <div className="hero-cat-selector-label">
-          <span>SELECT PACKAGING TYPE:</span>
-        </div>
-        <div className="hero-cat-scroll" ref={chipsScrollRef} role="tablist">
-          {HERO_CATEGORIES.map((cat, idx) => {
-            const isActive = idx === activeCat;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                className={`hero-cat-chip ${isActive ? 'active' : ''}`}
-                onClick={() => handleSelectCategory(idx)}
-              >
-                <img
-                  src={cat.image}
-                  alt=""
-                  className="cat-chip-thumb"
-                  loading="lazy"
-                  draggable={false}
-                />
-                <span className="cat-chip-label">{cat.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </motion.div>
-
-      {/* ======================================================
-          5. TRUST METRICS STRIP (At bottom below main hero content)
+          BELOW THE FOLD:
+          Natural scroll reveals trust proof & reviews
           ====================================================== */}
       <motion.div className="hero-trust-strip" variants={fadeUpV}>
         <div className="proof-metrics-grid">
