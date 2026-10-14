@@ -1018,6 +1018,11 @@ body::before {
    DESKTOP ADAPTATION (>= 992px): 2-Column Luxury Editorial Hero
    ========================================================================== */
 @media (min-width: 992px) {
+  .hero-main-container {
+    padding: 10px 40px 20px;
+    gap: 16px;
+  }
+
   .hero-content-section {
     display: grid;
     grid-template-columns: 1.08fr 0.92fr;
@@ -1026,8 +1031,8 @@ body::before {
       "cta visual"
       "chips visual"
       "trust visual";
-    column-gap: 48px;
-    row-gap: 16px;
+    column-gap: 40px;
+    row-gap: 12px;
     align-items: center;
   }
 
@@ -1037,36 +1042,45 @@ body::before {
   }
 
   .hero-headline {
-    font-size: clamp(38px, 4.4vw, 56px);
+    font-size: clamp(34px, 4.1vw, 52px);
+    margin-bottom: 4px;
+  }
+
+  .hero-supporting-text {
+    margin-bottom: 2px;
+    font-size: 15px;
   }
 
   .hero-cta-wrapper {
     grid-area: cta;
     order: unset;
+    margin-top: 2px;
   }
 
   .hero-cat-selector-wrapper {
     grid-area: chips;
     order: unset;
+    margin-top: 2px;
   }
 
   .hero-trust-strip {
     grid-area: trust;
     order: unset;
     margin-top: 4px;
+    padding: 12px 18px;
   }
 
   .hero-product-showcase {
     grid-area: visual;
     order: unset;
-    max-width: 540px;
+    max-width: 520px;
     margin: 0;
   }
 
   .hero-product-stage-card {
-    aspect-ratio: 4 / 3.2;
-    max-height: 380px;
-    border-radius: 26px;
+    aspect-ratio: 4 / 3.1;
+    max-height: 360px;
+    border-radius: 24px;
   }
 }
 
