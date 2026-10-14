@@ -29,8 +29,10 @@ export default function Hero() {
   };
 
   const handleExploreWork = () => {
-    const flagship = PRODUCTS[0];
-    handleSelectProduct(flagship);
+    const el = document.getElementById('products');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
