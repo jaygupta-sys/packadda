@@ -30,7 +30,7 @@ const MARQUEE_ITEMS = [
   '100% RECYCLABLE FSC PAPERS',
   'LOW MOQS FROM 100 UNITS',
   'PAN-INDIA EXPRESS LOGISTICS',
-  'COMPLIMENTARY 3D PROOFS',
+  'CUSTOM BRAND PRINTING',
   '7–10 DAYS PRODUCTION',
   'METALLIC FOIL & SOFT-TOUCH LAMINATION',
   'WATERPROOF VINYL DIE-CUT LABELS',
@@ -71,8 +71,8 @@ const TRUST_PILLARS = [
   },
   {
     icon: ShieldCheck,
-    title: 'Complimentary 3D Proof',
-    desc: 'Free artwork die-line check and digital mockup before printing.'
+    title: 'Quality Assured',
+    desc: 'Rigid testing, precision die-cutting and tactile unboxing perfection.'
   },
   {
     icon: Leaf,
@@ -175,7 +175,7 @@ export default function Footer() {
               aria-label="Get instant packaging quote"
             >
               <Sparkles size={18} className="btn-sparkle-icon" />
-              <span>Get Free 3D Die-Line &amp; Quote</span>
+              <span>Get Instant Packaging Quote</span>
               <ArrowUpRight size={18} strokeWidth={2.4} />
             </motion.button>
 
@@ -197,7 +197,7 @@ export default function Footer() {
           {/* 3 Quick Micro-Checks */}
           <div className="footer-cta-trust-row">
             <span className="trust-check-item">
-              <Check size={14} className="check-icon" /> Free 3D Mockup Check
+              <Check size={14} className="check-icon" /> Premium Custom Finishes
             </span>
             <span className="trust-dot-sep">•</span>
             <span className="trust-check-item">
