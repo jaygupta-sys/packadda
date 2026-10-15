@@ -123,7 +123,7 @@ export default function HeroNavbar({ onOpenQuote }) {
                 </button>
                 <div className="mobile-contact-note">
                   <span>Pan India Delivery • Custom Finishes</span>
-                  <p>hello@packadda.com</p>
+                  <p>saitruepackers@gmail.com</p>
                 </div>
               </div>
             </div>

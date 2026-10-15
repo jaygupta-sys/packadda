@@ -12,15 +12,13 @@ import {
   Clock,
   Truck,
   Leaf,
-  Send,
   Check,
   Phone,
   Mail,
   MapPin,
   MessageCircle,
   Instagram,
-  Linkedin,
-  ExternalLink
+  Linkedin
 } from 'lucide-react';
 import QuoteModal from './QuoteModal';
 
@@ -84,8 +82,6 @@ const TRUST_PILLARS = [
 export default function Footer() {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [quoteProduct, setQuoteProduct] = useState(null);
-  const [swatchEmail, setSwatchEmail] = useState('');
-  const [swatchSubmitted, setSwatchSubmitted] = useState(false);
 
   const handleOpenQuote = (productName = null) => {
     if (productName) {
@@ -94,15 +90,6 @@ export default function Footer() {
       setQuoteProduct(null);
     }
     setQuoteModalOpen(true);
-  };
-
-  const handleSwatchSubmit = (e) => {
-    e.preventDefault();
-    if (!swatchEmail.trim()) return;
-    setSwatchSubmitted(true);
-    setTimeout(() => {
-      // Keep feedback visible
-    }, 4000);
   };
 
   const scrollToTop = () => {
@@ -180,7 +167,7 @@ export default function Footer() {
             </motion.button>
 
             <motion.a
-              href="https://wa.me/919830000000?text=Hi%20Pack%20Adda!%20I%20am%20interested%20in%20custom%20packaging%20for%20my%20brand."
+              href="https://wa.me/919915510065?text=Hi%20Pack%20Adda!%20I%20am%20interested%20in%20custom%20packaging%20for%20my%20brand."
               target="_blank"
               rel="noopener noreferrer"
               className="btn-footer-whatsapp"
@@ -237,7 +224,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* 4. MAIN EDITORIAL NAVIGATION MATRIX */}
+      {/* 4. MAIN EDITORIAL NAVIGATION MATRIX (3-COLUMN BALANCED) */}
       <div className="footer-matrix-container">
         <div className="footer-matrix-grid">
           {/* Column 1: Brand & Contact */}
@@ -259,13 +246,13 @@ export default function Footer() {
 
             {/* Direct Studio Contacts */}
             <div className="footer-contact-list">
-              <a href="tel:+919830000000" className="footer-contact-link">
+              <a href="tel:+919915510065" className="footer-contact-link">
                 <Phone size={15} className="contact-icon" />
-                <span>+91 98300 00000</span>
+                <span>+91 99155 10065</span>
               </a>
-              <a href="mailto:hello@packadda.com" className="footer-contact-link">
+              <a href="mailto:saitruepackers@gmail.com" className="footer-contact-link">
                 <Mail size={15} className="contact-icon" />
-                <span>hello@packadda.com</span>
+                <span>saitruepackers@gmail.com</span>
               </a>
               <div className="footer-contact-item">
                 <MapPin size={15} className="contact-icon" />
@@ -294,7 +281,7 @@ export default function Footer() {
                 <Linkedin size={17} />
               </a>
               <a
-                href="https://wa.me/919830000000"
+                href="https://wa.me/919915510065"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-social-btn"
@@ -345,57 +332,6 @@ export default function Footer() {
               <p className="specs-detail">
                 Offset, Screen, Foil Stamping, Spot UV, Velvet Soft-Touch, Debossing &amp; Eco Water Inks.
               </p>
-            </div>
-          </div>
-
-          {/* Column 4: Material Swatch Box & Newsletter */}
-          <div className="footer-col footer-col-swatches">
-            <h4 className="footer-col-title">Request Swatch Kit</h4>
-            <div className="footer-swatch-box">
-              <div className="swatch-box-header">
-                <Sparkles size={16} className="swatch-icon" />
-                <span className="swatch-box-badge">TACTILE SAMPLE BOX</span>
-              </div>
-              <p className="swatch-box-desc">
-                Experience our 350gsm paper stocks, velvet lamination, gold foil, and kraft fluting in your own hands before ordering.
-              </p>
-
-              {swatchSubmitted ? (
-                <motion.div
-                  className="swatch-success-message"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  <Check size={18} className="success-check-icon" />
-                  <div>
-                    <strong>Swatch request received!</strong>
-                    <p>Our packaging consultant will dispatch your kit.</p>
-                  </div>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSwatchSubmit} className="swatch-form">
-                  <div className="swatch-input-wrapper">
-                    <input
-                      type="text"
-                      className="swatch-input"
-                      placeholder="WhatsApp No. or Email..."
-                      value={swatchEmail}
-                      onChange={(e) => setSwatchEmail(e.target.value)}
-                      required
-                    />
-                    <button
-                      type="submit"
-                      className="swatch-submit-btn"
-                      aria-label="Submit swatch kit request"
-                    >
-                      <Send size={15} />
-                    </button>
-                  </div>
-                  <span className="swatch-micro-note">
-                    Dispatched pan-India via express courier.
-                  </span>
-                </form>
-              )}
             </div>
           </div>
         </div>

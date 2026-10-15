@@ -4779,8 +4779,8 @@ body::before {
 
 .footer-matrix-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1.1fr 1fr 1.3fr;
-  gap: 40px;
+  grid-template-columns: 1.35fr 1.15fr 1.25fr;
+  gap: 52px;
 }
 
 .footer-col-title {
@@ -5014,133 +5014,6 @@ body::before {
   margin: 0;
 }
 
-/* Column 4: Swatch Box */
-.footer-swatch-box {
-  background: #FFFFFF;
-  border: 1.5px solid rgba(73, 41, 29, 0.12);
-  border-radius: 20px;
-  padding: 22px 20px;
-  box-shadow: 0 4px 18px rgba(73, 41, 29, 0.04);
-  position: relative;
-  overflow: hidden;
-}
-
-.swatch-box-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-
-.swatch-icon {
-  color: var(--color-accent);
-}
-
-.swatch-box-badge {
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  color: var(--color-accent);
-}
-
-.swatch-box-desc {
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: #6E5C54;
-  margin: 0 0 16px;
-}
-
-.swatch-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.swatch-input-wrapper {
-  display: flex;
-  align-items: center;
-  background: #F7F3EB;
-  border: 1.5px solid rgba(73, 41, 29, 0.14);
-  border-radius: 999px;
-  padding: 4px 5px 4px 14px;
-  transition: all 0.2s ease;
-}
-
-.swatch-input-wrapper:focus-within {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 10px rgba(213, 104, 63, 0.2);
-  background: #FFFFFF;
-}
-
-.swatch-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: var(--font-body);
-  font-size: 12.5px;
-  color: var(--color-primary);
-  width: 100%;
-}
-
-.swatch-input::placeholder {
-  color: rgba(73, 41, 29, 0.4);
-}
-
-.swatch-submit-btn {
-  background: var(--color-accent);
-  color: #FFFFFF;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: all 0.2s ease;
-}
-
-.swatch-submit-btn:hover {
-  background: var(--color-accent-hover);
-  transform: scale(1.06);
-}
-
-.swatch-micro-note {
-  font-size: 10.5px;
-  color: #8E7B72;
-}
-
-.swatch-success-message {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 12px;
-  padding: 12px;
-  color: #065F46;
-}
-
-.swatch-success-message strong {
-  display: block;
-  font-size: 12.5px;
-  color: #064E3B;
-  margin-bottom: 2px;
-}
-
-.swatch-success-message p {
-  font-size: 11px;
-  margin: 0;
-  color: #047857;
-}
-
-.success-check-icon {
-  color: #10B981;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
 
 /* 5. GIGANTIC BACKGROUND EDITORIAL WATERMARK */
 .footer-watermark-wrapper {

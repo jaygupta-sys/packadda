@@ -69,7 +69,7 @@ export default function StudioQuoteModal({
       `🔢 Quantity: ${config.quantity} pcs\n\n` +
       `Please provide an official quotation.`
     );
-    window.open(`https://wa.me/919830000000?text=${text}`, '_blank');
+    window.open(`https://wa.me/919915510065?text=${text}`, '_blank');
   };
 
   return (
