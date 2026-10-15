@@ -1061,12 +1061,12 @@ body::before {
 
   .hero-content-section {
     display: grid;
-    grid-template-columns: 1.08fr 0.92fr;
+    grid-template-columns: 0.95fr 1.15fr;
     grid-template-areas:
       "text visual"
       "cta visual"
       "trust visual";
-    column-gap: 40px;
+    column-gap: 48px;
     row-gap: 14px;
     align-items: center;
   }
@@ -1136,28 +1136,75 @@ body::before {
 
   .hero-product-showcase {
     grid-area: visual;
-    max-width: 520px;
+    max-width: 680px;
+    width: 100%;
     margin: 0;
   }
 
   .hero-product-stage-card {
     height: auto;
-    min-height: 340px;
-    max-height: 380px;
-    aspect-ratio: 4 / 3.2;
-    border-radius: 26px;
+    min-height: 440px;
+    max-height: 520px;
+    aspect-ratio: 4 / 3.1;
+    border-radius: 30px;
     padding-bottom: 0;
     margin-bottom: 0;
+    box-shadow: 0 24px 60px -15px rgba(73, 41, 29, 0.14), 0 6px 18px rgba(73, 41, 29, 0.04);
+  }
+
+  .hero-product-img-wrapper {
+    width: 96%;
+    height: 96%;
+  }
+
+  .hero-product-featured-img {
+    max-width: 96%;
+    max-height: 96%;
+  }
+
+  .hero-product-nav-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .hero-product-nav-prev {
+    left: 14px;
+  }
+
+  .hero-product-nav-next {
+    right: 14px;
+  }
+
+  .hero-product-cat-badge {
+    top: 14px;
+    left: 14px;
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+
+  .hero-product-dots-row {
+    margin-top: 10px;
+    margin-bottom: 12px;
+  }
+
+  .hero-product-dot {
+    height: 7px;
+    width: 7px;
+  }
+
+  .hero-product-dot.active {
+    width: 22px;
   }
 
   .hero-category-chips-row {
     justify-content: center;
     margin-bottom: 0;
+    gap: 9px;
   }
 
   .hero-category-chip {
-    padding: 7.5px 14px;
-    font-size: 12px;
+    padding: 8px 16px;
+    font-size: 12.5px;
   }
 }
 
@@ -4871,6 +4918,41 @@ body::before {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.footer-instagram-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(73, 41, 29, 0.14);
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(73, 41, 29, 0.04);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer-instagram-pill:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(213, 104, 63, 0.35);
+}
+
+.footer-instagram-pill .insta-arrow {
+  opacity: 0.7;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.footer-instagram-pill:hover .insta-arrow {
+  opacity: 1;
+  transform: translate(2px, -2px);
 }
 
 .footer-social-btn {

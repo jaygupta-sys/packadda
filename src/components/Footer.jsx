@@ -17,8 +17,7 @@ import {
   Mail,
   MapPin,
   MessageCircle,
-  Instagram,
-  Linkedin
+  Instagram
 } from 'lucide-react';
 import QuoteModal from './QuoteModal';
 
@@ -260,34 +259,18 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Social Icons */}
+            {/* Instagram Social Link */}
             <div className="footer-social-row">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/packadda?vrfl=cXBkMjV1YTI0cWNj"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="footer-social-btn"
-                aria-label="Pack Adda Instagram"
+                className="footer-instagram-pill"
+                aria-label="Follow Pack Adda on Instagram"
               >
-                <Instagram size={17} />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-btn"
-                aria-label="Pack Adda LinkedIn"
-              >
-                <Linkedin size={17} />
-              </a>
-              <a
-                href="https://wa.me/919915510065"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-btn"
-                aria-label="Pack Adda WhatsApp"
-              >
-                <MessageCircle size={17} />
+                <Instagram size={15} />
+                <span>@packadda on Instagram</span>
+                <ArrowUpRight size={13} className="insta-arrow" />
               </a>
             </div>
           </div>
