@@ -621,9 +621,9 @@ body::before {
 
 .hero-product-stage-card {
   width: 100%;
-  height: clamp(260px, 34vh, 285px);
-  min-height: 260px;
-  max-height: 285px;
+  height: clamp(215px, 28vh, 245px);
+  min-height: 215px;
+  max-height: 245px;
   background: linear-gradient(145deg, #FFFFFF 0%, #FAF6EE 55%, #F4ECE0 100%);
   border: 1.5px solid rgba(73, 41, 29, 0.12);
   border-radius: 20px;
@@ -638,9 +638,9 @@ body::before {
   user-select: none;
   transform-style: preserve-3d;
   will-change: transform;
-  padding-bottom: 38px;
+  padding-bottom: 0;
   box-sizing: border-box;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .hero-product-stage-card:active {
@@ -669,8 +669,8 @@ body::before {
 /* Image container with 3D floating animation */
 .hero-product-img-wrapper {
   position: relative;
-  width: 92%;
-  height: calc(100% - 30px);
+  width: 95%;
+  height: 95%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -783,68 +783,90 @@ body::before {
   right: 8px;
 }
 
-/* Integrated Minimalist Floating Category Tabs directly inside the card */
-.hero-stage-floating-tabs {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+/* 4-Dot Slider Pagination Indicator */
+.hero-product-dots-row {
   display: flex;
   align-items: center;
-  gap: 3px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 3px 5px;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  margin-bottom: 9px;
+  width: 100%;
+}
+
+.hero-product-dot {
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  background: rgba(73, 41, 29, 0.22);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-product-dot:hover {
+  background: rgba(213, 104, 63, 0.6);
+}
+
+.hero-product-dot.active {
+  width: 18px;
   border-radius: 999px;
-  border: 1px solid rgba(73, 41, 29, 0.12);
-  box-shadow: 0 4px 14px rgba(73, 41, 29, 0.08);
-  z-index: 15;
-  max-width: 95%;
-  width: max-content;
+  background: var(--color-accent);
+  box-shadow: 0 1px 6px rgba(213, 104, 63, 0.35);
+}
+
+/* Category Chips Bar with Icons */
+.hero-category-chips-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  padding: 2px 2px 4px;
+  margin-bottom: 12px;
 }
 
-.hero-stage-floating-tabs::-webkit-scrollbar {
+.hero-category-chips-row::-webkit-scrollbar {
   display: none;
 }
 
-.stage-floating-tab {
-  padding: 4px 8px;
+.hero-category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6.5px 12px;
   border-radius: 999px;
-  border: none;
-  background: transparent;
   font-family: var(--font-display);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--color-primary);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #FFFFFF;
+  color: var(--color-primary);
+  border: 1.5px solid rgba(73, 41, 29, 0.12);
+  box-shadow: 0 2px 6px rgba(73, 41, 29, 0.04);
 }
 
-@media (max-width: 375px) {
-  .hero-stage-floating-tabs {
-    max-width: 98%;
-    gap: 2px;
-    padding: 2px 3px;
-  }
-  .stage-floating-tab {
-    padding: 3px 5.5px;
-    font-size: 9.5px;
-  }
-}
-
-.stage-floating-tab:hover {
+.hero-category-chip:hover {
+  border-color: var(--color-accent);
   color: var(--color-accent);
 }
 
-.stage-floating-tab.active {
+.hero-category-chip.active {
   background-color: var(--color-primary);
   color: #FAF7F2;
-  box-shadow: 0 2px 8px rgba(73, 41, 29, 0.26);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 14px rgba(73, 41, 29, 0.22);
+}
+
+.hero-category-chip .chip-icon {
+  flex-shrink: 0;
 }
 
 /* 2. HEADLINE & SUPPORTING TEXT */
@@ -1124,13 +1146,18 @@ body::before {
     max-height: 380px;
     aspect-ratio: 4 / 3.2;
     border-radius: 26px;
-    padding-bottom: 44px;
+    padding-bottom: 0;
     margin-bottom: 0;
   }
 
-  .stage-floating-tab {
+  .hero-category-chips-row {
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .hero-category-chip {
+    padding: 7.5px 14px;
     font-size: 12px;
-    padding: 5px 14px;
   }
 }
 

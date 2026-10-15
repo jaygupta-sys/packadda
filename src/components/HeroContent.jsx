@@ -1,37 +1,41 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowUpRight, ChevronLeft, ChevronRight, Star, Plus } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Star, Plus, Package, ShoppingBag, CreditCard, Tag } from 'lucide-react';
 import { TRUST_METRICS } from '../data/products';
 
-/* 4 Core Hero Packaging Categories with authentic imagery */
+/* 4 Core Hero Packaging Categories with authentic imagery & icons */
 const HERO_CATEGORIES = [
   {
     id: 'custom-boxes',
     label: 'Custom Boxes',
     image: '/images/products/boxes.jpg?v=3',
     tagline: 'Rigid & corrugated custom mailers',
-    accentColor: '#D5683F'
+    accentColor: '#D5683F',
+    icon: Package
   },
   {
     id: 'paper-bags',
     label: 'Paper Bags',
     image: '/images/products/paper-bags.jpg?v=3',
     tagline: 'Kraft & luxury branded carry bags',
-    accentColor: '#D5683F'
+    accentColor: '#D5683F',
+    icon: ShoppingBag
   },
   {
     id: 'business-cards',
     label: 'Business Cards',
     image: '/images/products/cards.jpg?v=3',
     tagline: 'Foil-stamped & textured visiting cards',
-    accentColor: '#D5683F'
+    accentColor: '#D5683F',
+    icon: CreditCard
   },
   {
     id: 'stickers',
     label: 'Stickers',
     image: '/images/products/stickers.jpg?v=3',
     tagline: 'Die-cut waterproof & metallic sticker sheets',
-    accentColor: '#D5683F'
+    accentColor: '#D5683F',
+    icon: Tag
   }
 ];
 
@@ -260,28 +264,45 @@ export default function HeroContent({
               <ChevronRight size={18} strokeWidth={2.5} />
             </button>
 
-            {/* Integrated Minimalist Floating Category Tabs directly INSIDE the card */}
-            <div className="hero-stage-floating-tabs" role="tablist" aria-label="Select packaging category">
-              {HERO_CATEGORIES.map((cat, idx) => {
-                const isActive = idx === activeCat;
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={`stage-floating-tab ${isActive ? 'active' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectCategory(idx);
-                    }}
-                  >
-                    <span>{cat.label}</span>
-                  </button>
-                );
-              })}
-            </div>
           </motion.div>
+
+          {/* 4-Dot Slider Pagination Indicator (Matches screenshot) */}
+          <div className="hero-product-dots-row" role="tablist" aria-label="Product slides">
+            {HERO_CATEGORIES.map((cat, idx) => {
+              const isActive = idx === activeCat;
+              return (
+                <button
+                  key={`dot-${cat.id}`}
+                  type="button"
+                  className={`hero-product-dot ${isActive ? 'active' : ''}`}
+                  onClick={() => handleSelectCategory(idx)}
+                  aria-label={`Show ${cat.label}`}
+                  aria-selected={isActive}
+                />
+              );
+            })}
+          </div>
+
+          {/* Category Chips Bar with Icons (Matches screenshot) */}
+          <div className="hero-category-chips-row" role="tablist" aria-label="Select packaging category">
+            {HERO_CATEGORIES.map((cat, idx) => {
+              const isActive = idx === activeCat;
+              const Icon = cat.icon;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`hero-category-chip ${isActive ? 'active' : ''}`}
+                  onClick={() => handleSelectCategory(idx)}
+                >
+                  <Icon size={13} strokeWidth={2.4} className="chip-icon" />
+                  <span className="chip-label">{cat.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </motion.div>
 
         {/* 2. HEADLINE & SUPPORTING TEXT */}
