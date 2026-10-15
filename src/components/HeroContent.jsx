@@ -8,7 +8,7 @@ const HERO_CATEGORIES = [
   {
     id: 'custom-boxes',
     label: 'Custom Boxes',
-    image: '/images/products/boxes.jpg',
+    image: '/images/products/boxes.jpg?v=2',
     tagline: 'Rigid & corrugated custom mailers',
     accentColor: '#D5683F'
   },

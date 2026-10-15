@@ -5,7 +5,7 @@ export const CATALOG_PRODUCTS = [
     category: 'Boxes',
     title: 'Custom Boxes',
     subtitle: 'Tuck-in Type • 250 GSM Only',
-    image: '/images/products/boxes.jpg',
+    image: '/images/products/boxes.jpg?v=2',
     description:
       'Tuck-in type packaging boxes manufactured in 250 GSM paperboard. Min. 50 units (Plain) / 100 units (With Logo).',
     specs: {
