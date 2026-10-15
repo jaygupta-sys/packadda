@@ -8,29 +8,29 @@ const HERO_CATEGORIES = [
   {
     id: 'custom-boxes',
     label: 'Custom Boxes',
-    image: '/images/products/boxes.jpg?v=2',
+    image: '/images/products/boxes.jpg?v=3',
     tagline: 'Rigid & corrugated custom mailers',
     accentColor: '#D5683F'
   },
   {
     id: 'paper-bags',
     label: 'Paper Bags',
-    image: '/images/products/paper-bags.jpg',
+    image: '/images/products/paper-bags.jpg?v=3',
     tagline: 'Kraft & luxury branded carry bags',
     accentColor: '#D5683F'
   },
   {
     id: 'business-cards',
     label: 'Business Cards',
-    image: '/images/products/cards.jpg',
+    image: '/images/products/cards.jpg?v=3',
     tagline: 'Foil-stamped & textured visiting cards',
     accentColor: '#D5683F'
   },
   {
     id: 'stickers',
     label: 'Stickers',
-    image: '/images/products/stickers.jpg',
-    tagline: 'Die-cut vinyl & waterproof roll labels',
+    image: '/images/products/stickers.jpg?v=3',
+    tagline: 'Die-cut waterproof & metallic sticker sheets',
     accentColor: '#D5683F'
   }
 ];

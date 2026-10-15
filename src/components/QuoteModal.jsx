@@ -1,24 +1,90 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowUpRight, CheckCircle2, Info, MapPin } from 'lucide-react';
+import {
+  X,
+  ArrowUpRight,
+  CheckCircle2,
+  Info,
+  MapPin,
+  UploadCloud,
+  FileText,
+  Trash2,
+  Sparkles,
+  Layers,
+  HelpCircle
+} from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 
+/* 1. Box Color Swatches */
+const BOX_COLORS = [
+  { id: 'kraft-brown', name: 'Plain Brown', color: '#B38B59' },
+  { id: 'crisp-white', name: 'White', color: '#FFFFFF', border: '#D0C8BE' },
+  { id: 'pastel-pink', name: 'Pink', color: '#F2B8BF' },
+  { id: 'teal-green', name: 'Teal Green', color: '#1E6E66' },
+  { id: 'matte-black', name: 'Black', color: '#1F1F1F' }
+];
+
+/* 2. Paper Bags GSM Options */
 const GSM_OPTIONS = [
   { id: 'kraft-140', name: 'Kraft Paper', gsm: '140 GSM', desc: 'Natural recycled Kraft' },
   { id: 'white-120', name: 'White Paper', gsm: '120 GSM', desc: 'Clean premium white paper' },
   { id: 'superior-250-300', name: 'Superior Board', gsm: '250–300 GSM', desc: 'Heavyweight rigid luxury finish' }
 ];
 
+/* 3. Premium Cards Shapes & Finishes (MOQ 200, 300, 1000, 2000) */
 const CARD_SHAPES = [
+  { id: 'Rectangle', name: 'Rectangle', desc: 'Standard 3.5 × 2 in' },
   { id: 'Square', name: 'Square', desc: 'Modern 2.5 × 2.5 in' },
   { id: 'Circle', name: 'Circle', desc: 'Die-cut Round 2.5 in' },
-  { id: 'Rectangle', name: 'Rectangle', desc: 'Standard 3.5 × 2 in' }
+  { id: 'Oval', name: 'Oval', desc: 'Curved Die-Cut 3 × 2 in' }
 ];
 
 const CARD_FINISHES = [
-  { id: 'Lamination', name: 'Lamination', desc: 'Protective bonded film' },
-  { id: 'Matte', name: 'Matte', desc: 'Sleek non-glare touch' },
-  { id: 'Gloss', name: 'Gloss', desc: 'High-shine vibrant sheen' }
+  { id: 'Thermal Lamination', name: 'Lamination', desc: 'Protective bonded film' },
+  { id: 'Matte Touch', name: 'Matte Finish', desc: 'Sleek non-glare touch' },
+  { id: 'Gloss Finish', name: 'Gloss Finish', desc: 'High-shine vibrant sheen' },
+  { id: 'Velvet Touch', name: 'Velvet Touch', desc: 'Ultra-soft luxury feel' }
+];
+
+/* 4. Custom Tags Shapes (Supplied without rope, clean punched hole) */
+const TAG_SHAPES = [
+  { id: 'Rectangle', name: 'Rectangle', desc: 'Classic punched tag' },
+  { id: 'Square', name: 'Square', desc: 'Modern square' },
+  { id: 'Circle', name: 'Circle', desc: 'Round punch tag' },
+  { id: 'Oval', name: 'Oval', desc: 'Curved apparel tag' },
+  { id: 'Custom', name: 'Custom Contour', desc: 'Brand outline shape' }
+];
+
+/* 5. Custom Sticker Shapes & Finishes (Rectangle Sheet Format, NOT Rolls) */
+const STICKER_SHAPES = [
+  { id: 'Circle', name: 'Circle', desc: 'Round die-cut seal' },
+  { id: 'Square', name: 'Square', desc: 'Square label' },
+  { id: 'Rectangle', name: 'Rectangle', desc: 'Standard rectangle' },
+  { id: 'Oval', name: 'Oval', desc: 'Curved oval label' },
+  { id: 'Custom', name: 'Custom Logo Contour', desc: 'Bespoke outline kiss-cut' }
+];
+
+const STICKER_BASES = [
+  { id: 'white-waterproof', name: 'White Base Waterproof', desc: 'Heavy-duty oil, water & UV resistant vinyl' },
+  { id: 'silver-base', name: 'Silver Base (Metallic)', desc: 'Brushed chrome metallic sheen' },
+  { id: 'transparent-base', name: 'Transparent Base', desc: 'Crystal-clear see-through vinyl' },
+  { id: 'standard-paper', name: 'Standard Quality', desc: 'Premium coated paper sticker' }
+];
+
+/* 6. Artisanal Wooden Stamps Sizes & Ink Pads (Flat wood mount, NO handle) */
+const STAMP_SIZES = [
+  { id: '2x2', name: '2" × 2"', desc: 'Square logo / monogram' },
+  { id: '3x3', name: '3" × 3"', desc: 'Standard packaging seal' },
+  { id: '4x4', name: '4" × 4"', desc: 'Medium mailer stamp' },
+  { id: '3x6', name: '3" × 6"', desc: 'Wide banner / address' },
+  { id: '6x7', name: '6" × 7"', desc: 'Large box brand stamp' }
+];
+
+const INK_PADS = [
+  { id: 'black', name: 'Rich Black', color: '#1A1A1A' },
+  { id: 'red', name: 'Crimson Red', color: '#D32F2F' },
+  { id: 'green', name: 'Emerald Green', color: '#2E7D32' },
+  { id: 'none', name: 'Stamp Only (No Ink)', color: '#A89F91' }
 ];
 
 const normalizeProductId = (id) => {
@@ -31,11 +97,20 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
   const [selectedProduct, setSelectedProduct] = useState(
     normalizeProductId(initialProduct?.id)
   );
+
+  // Product specific configuration states
   const [customizationType, setCustomizationType] = useState('with-logo'); // 'plain' or 'with-logo'
+  const [boxColor, setBoxColor] = useState('kraft-brown');
   const [selectedGsm, setSelectedGsm] = useState('kraft-140');
   const [cardShape, setCardShape] = useState('Rectangle');
-  const [cardFinish, setCardFinish] = useState('Matte');
+  const [cardFinish, setCardFinish] = useState('Matte Touch');
+  const [tagShape, setTagShape] = useState('Rectangle');
+  const [stickerShape, setStickerShape] = useState('Circle');
+  const [stickerBase, setStickerBase] = useState('white-waterproof');
+  const [stampSize, setStampSize] = useState('3x3');
+  const [inkPadColor, setInkPadColor] = useState('black');
   const [quantity, setQuantity] = useState('100');
+  const [uploadedArtwork, setUploadedArtwork] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -54,33 +129,36 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
     }
   }, [initialProduct]);
 
-  // Adjust quantity based on product type and customization rules
+  // Adjust defaults per product selection
   useEffect(() => {
     if (selectedProduct === 'custom-boxes') {
-      // Custom boxes: 250 GSM only. Plain min 50, with-logo min 100
-      if (customizationType === 'with-logo') {
-        if (quantity === '50') {
-          setQuantity('100');
-        }
-      }
-    } else if (selectedProduct === 'paper-bags') {
-      // Paper bags: Plain min 250, with-logo min 500
-      if (customizationType === 'with-logo') {
-        if (['50', '100', '250'].includes(quantity)) {
-          setQuantity('500');
-        }
-      } else {
-        if (['50', '100'].includes(quantity)) {
-          setQuantity('250');
-        }
-      }
-    } else if (selectedProduct === 'business-cards') {
-      // Premium cards 350 GSM: min 100
-      if (quantity === '50') {
+      if (customizationType === 'with-logo' && quantity === '50') {
         setQuantity('100');
       }
+    } else if (selectedProduct === 'paper-bags') {
+      if (customizationType === 'with-logo') {
+        if (['50', '100', '250'].includes(quantity)) setQuantity('500');
+      } else {
+        if (['50', '100'].includes(quantity)) setQuantity('250');
+      }
+    } else if (selectedProduct === 'business-cards') {
+      if (!['200', '300', '1,000', '2,000', '5,000+'].includes(quantity)) {
+        setQuantity('200');
+      }
+    } else if (selectedProduct === 'tags') {
+      if (!['250', '500', '1,000', '2,500', '5,000+'].includes(quantity)) {
+        setQuantity('250');
+      }
+    } else if (selectedProduct === 'stickers') {
+      if (!['5 Sheets', '10 Sheets', '25 Sheets', '50 Sheets', '100+ Sheets'].includes(quantity)) {
+        setQuantity('5 Sheets');
+      }
+    } else if (selectedProduct === 'stamps') {
+      if (!['1', '2', '3', '5', '10+'].includes(quantity)) {
+        setQuantity('1');
+      }
     }
-  }, [selectedProduct, customizationType, quantity]);
+  }, [selectedProduct, customizationType]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -109,12 +187,31 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
         : ['250', '500', '1,000', '2,500', '5,000+'];
     }
     if (selectedProduct === 'business-cards') {
-      return ['100', '250', '500', '1,000', '2,000+'];
+      return ['200', '300', '1,000', '2,000', '5,000+'];
+    }
+    if (selectedProduct === 'tags') {
+      return ['250', '500', '1,000', '2,500', '5,000+'];
+    }
+    if (selectedProduct === 'stickers') {
+      return ['5 Sheets', '10 Sheets', '25 Sheets', '50 Sheets', '100+ Sheets'];
+    }
+    if (selectedProduct === 'stamps') {
+      return ['1', '2', '3', '5', '10+'];
     }
     return ['100', '250', '500', '1,000', '2,500+'];
   };
 
   const quantityOptions = getQuantityOptions();
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUploadedArtwork({
+        name: file.name,
+        size: `${(file.size / 1024).toFixed(0)} KB`
+      });
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -128,6 +225,10 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
 
   const activeProductData = PRODUCTS.find((p) => p.id === selectedProduct);
   const activeGsmData = GSM_OPTIONS.find((g) => g.id === selectedGsm);
+  const activeBoxColor = BOX_COLORS.find((c) => c.id === boxColor);
+  const activeStickerBase = STICKER_BASES.find((b) => b.id === stickerBase);
+  const activeStampSize = STAMP_SIZES.find((s) => s.id === stampSize);
+  const activeInkPad = INK_PADS.find((i) => i.id === inkPadColor);
 
   return (
     <AnimatePresence>
@@ -178,7 +279,10 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                   {selectedProduct === 'custom-boxes' && (
                     <>
                       <div className="summary-pill">
-                        <span>Box Type:</span> <strong>Tuck-in Box (250 GSM)</strong>
+                        <span>Box Type:</span> <strong>Tuck-in Corrugated (250 GSM)</strong>
+                      </div>
+                      <div className="summary-pill">
+                        <span>Color:</span> <strong>{activeBoxColor?.name}</strong>
                       </div>
                       <div className="summary-pill">
                         <span>Branding:</span>{' '}
@@ -201,6 +305,45 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                     </>
                   )}
 
+                  {selectedProduct === 'tags' && (
+                    <>
+                      <div className="summary-pill">
+                        <span>Tag Shape:</span> <strong>{tagShape}</strong>
+                      </div>
+                      <div className="summary-pill">
+                        <span>Style:</span> <strong>Pre-Punched Hole (Without Rope)</strong>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedProduct === 'stickers' && (
+                    <>
+                      <div className="summary-pill">
+                        <span>Format:</span> <strong>Rectangle Sheet Format</strong>
+                      </div>
+                      <div className="summary-pill">
+                        <span>Sticker Shape:</span> <strong>{stickerShape}</strong>
+                      </div>
+                      <div className="summary-pill">
+                        <span>Base Quality:</span> <strong>{activeStickerBase?.name}</strong>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedProduct === 'stamps' && (
+                    <>
+                      <div className="summary-pill">
+                        <span>Stamp Size:</span> <strong>{activeStampSize?.name}</strong>
+                      </div>
+                      <div className="summary-pill">
+                        <span>Mount:</span> <strong>Flat Hardwood Block (No Handle)</strong>
+                      </div>
+                      <div className="summary-pill">
+                        <span>Ink Pad:</span> <strong>{activeInkPad?.name}</strong>
+                      </div>
+                    </>
+                  )}
+
                   {selectedProduct === 'paper-bags' && (
                     <>
                       <div className="summary-pill">
@@ -213,8 +356,14 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                     </>
                   )}
 
+                  {uploadedArtwork && (
+                    <div className="summary-pill">
+                      <span>Artwork Attached:</span> <strong>{uploadedArtwork.name} ({uploadedArtwork.size})</strong>
+                    </div>
+                  )}
+
                   <div className="summary-pill">
-                    <span>Quantity:</span> <strong>{quantity} units</strong>
+                    <span>Quantity:</span> <strong>{quantity} {selectedProduct === 'stickers' ? '' : selectedProduct === 'business-cards' ? 'cards' : 'units'}</strong>
                   </div>
                   <div className="summary-pill">
                     <span>Delivery PIN:</span> <strong>{formData.pincode}</strong>
@@ -249,27 +398,61 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                   </div>
                 </div>
 
-                {/* 1. CUSTOM BOXES SPECIFICATION (Tuck-in type, 250 GSM only, 50 plain / 100 with logo) */}
+                {/* ======================================================
+                    1. CUSTOM BOXES CONFIGURATOR
+                    ====================================================== */}
                 {selectedProduct === 'custom-boxes' && (
-                  <div className="product-spec-callout">
-                    <div className="callout-badge-row">
-                      <span className="spec-highlight-pill">TUCK-IN TYPE BOX</span>
-                      <span className="spec-highlight-pill accent">250 GSM ONLY</span>
+                  <div className="product-configurator-block">
+                    <div className="product-spec-callout">
+                      <div className="callout-badge-row">
+                        <span className="spec-highlight-pill">TUCK-IN CORRUGATED BOX</span>
+                        <span className="spec-highlight-pill accent">250 GSM BOARD</span>
+                        <span className="spec-highlight-pill">FULL CUSTOMIZATION</span>
+                      </div>
+                      <p className="callout-desc">
+                        Manufactured in premium <strong>250 GSM corrugated paperboard</strong> with secure tuck-in flaps. Available plain in 5 stylish colors or fully printed with your brand logo.
+                      </p>
                     </div>
-                    <p className="callout-desc">
-                      Manufactured strictly in <strong>250 GSM paperboard</strong> with tuck-in closure flaps. Minimum <strong>50 units for plain</strong>, or <strong>100 units with custom logo</strong>.
-                    </p>
+
+                    {/* Box Colors Swatches */}
+                    <div className="form-group">
+                      <div className="form-label-row">
+                        <label className="form-label">Select Box Color</label>
+                        <span className="form-sub-hint">Plain Brown, White, Pink, Teal Green, Black</span>
+                      </div>
+                      <div className="colors-toggle-grid">
+                        {BOX_COLORS.map((c) => (
+                          <button
+                            key={c.id}
+                            type="button"
+                            className={`color-swatch-btn ${boxColor === c.id ? 'active' : ''}`}
+                            onClick={() => setBoxColor(c.id)}
+                          >
+                            <span
+                              className="swatch-circle"
+                              style={{
+                                backgroundColor: c.color,
+                                border: c.border ? `1px solid ${c.border}` : 'none'
+                              }}
+                            />
+                            <span className="swatch-label">{c.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                {/* 2. BUSINESS CARDS SPECIFICATION (Premium Card, 350 GSM, Square/Circle/Rectangle, Lamination/Matte/Gloss) */}
+                {/* ======================================================
+                    2. PREMIUM CARDS CONFIGURATOR
+                    ====================================================== */}
                 {selectedProduct === 'business-cards' && (
-                  <div className="cards-configurator-section">
+                  <div className="product-configurator-block">
                     <div className="product-spec-callout cards-callout">
                       <div className="callout-badge-row">
                         <span className="spec-highlight-pill">PREMIUM CARD</span>
                         <span className="spec-highlight-pill accent">350 GSM BOARD</span>
-                        <span className="spec-highlight-pill">MIN. 100 CARDS</span>
+                        <span className="spec-highlight-pill">MOQ 200–2,000</span>
                       </div>
                     </div>
 
@@ -277,7 +460,7 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                     <div className="form-group">
                       <div className="form-label-row">
                         <label className="form-label">Card Shape (Die-cut)</label>
-                        <span className="form-sub-hint">Square, Circle, or Rectangle</span>
+                        <span className="form-sub-hint">Rectangle, Square, Circle, Oval</span>
                       </div>
                       <div className="shapes-toggle-grid">
                         {CARD_SHAPES.map((s) => (
@@ -295,11 +478,11 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                       </div>
                     </div>
 
-                    {/* Finishes / Types Selector */}
+                    {/* Finishes / Lamination */}
                     <div className="form-group">
                       <div className="form-label-row">
-                        <label className="form-label">Finish / Coating Type</label>
-                        <span className="form-sub-hint">Lamination, Matte, or Gloss</span>
+                        <label className="form-label">Lamination &amp; Finish Type</label>
+                        <span className="form-sub-hint">Custom lamination per requirement</span>
                       </div>
                       <div className="finishes-toggle-grid">
                         {CARD_FINISHES.map((f) => (
@@ -318,12 +501,186 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                   </div>
                 )}
 
-                {/* 3. PAPER BAGS GSM SELECTION */}
+                {/* ======================================================
+                    3. CUSTOM TAGS CONFIGURATOR (Clean punched hole, no rope)
+                    ====================================================== */}
+                {selectedProduct === 'tags' && (
+                  <div className="product-configurator-block">
+                    <div className="product-spec-callout">
+                      <div className="callout-badge-row">
+                        <span className="spec-highlight-pill">CUSTOM DIE-CUT TAGS</span>
+                        <span className="spec-highlight-pill accent">CLEAN PUNCHED HOLE</span>
+                        <span className="spec-highlight-pill">SUPPLIED WITHOUT ROPE</span>
+                      </div>
+                      <p className="callout-desc">
+                        Custom-shaped merchandise tags pre-punched with a precision hole for immediate use (supplied ready without rope).
+                      </p>
+                    </div>
+
+                    {/* Tag Shapes */}
+                    <div className="form-group">
+                      <div className="form-label-row">
+                        <label className="form-label">Tag Shape (Die-cut)</label>
+                        <span className="form-sub-hint">Rectangle, Square, Circle, Oval, Custom</span>
+                      </div>
+                      <div className="shapes-toggle-grid">
+                        {TAG_SHAPES.map((s) => (
+                          <button
+                            key={s.id}
+                            type="button"
+                            className={`shape-card-btn ${tagShape === s.id ? 'active' : ''}`}
+                            onClick={() => setTagShape(s.id)}
+                          >
+                            <span className={`shape-visual-icon shape-${s.id.toLowerCase()}`} />
+                            <span className="shape-name">{s.name}</span>
+                            <span className="shape-desc">{s.desc}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ======================================================
+                    4. CUSTOM STICKERS & LABELS (Rectangle Sheet Format)
+                    ====================================================== */}
+                {selectedProduct === 'stickers' && (
+                  <div className="product-configurator-block">
+                    <div className="product-spec-callout">
+                      <div className="callout-badge-row">
+                        <span className="spec-highlight-pill">FLAT SHEET FORMAT</span>
+                        <span className="spec-highlight-pill accent">NOT ROLLS</span>
+                        <span className="spec-highlight-pill">WATERPROOF &amp; METALLIC</span>
+                      </div>
+                      <p className="callout-desc">
+                        Supplied on flat rectangular kiss-cut sheets. Precision cut around your brand logo or geometric shape.
+                      </p>
+                    </div>
+
+                    {/* Sticker Shapes */}
+                    <div className="form-group">
+                      <div className="form-label-row">
+                        <label className="form-label">Sticker Shape (Die-cut)</label>
+                        <span className="form-sub-hint">Circle, Square, Rectangle, Oval, Custom Logo Contour</span>
+                      </div>
+                      <div className="shapes-toggle-grid">
+                        {STICKER_SHAPES.map((s) => (
+                          <button
+                            key={s.id}
+                            type="button"
+                            className={`shape-card-btn ${stickerShape === s.id ? 'active' : ''}`}
+                            onClick={() => setStickerShape(s.id)}
+                          >
+                            <span className={`shape-visual-icon shape-${s.id.toLowerCase()}`} />
+                            <span className="shape-name">{s.name}</span>
+                            <span className="shape-desc">{s.desc}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Sticker Quality & Base Material */}
+                    <div className="form-group">
+                      <div className="form-label-row">
+                        <label className="form-label">Sticker Quality &amp; Base Material</label>
+                        <span className="form-sub-hint">White Waterproof, Silver, Transparent, Standard</span>
+                      </div>
+                      <div className="finishes-toggle-grid">
+                        {STICKER_BASES.map((b) => (
+                          <button
+                            key={b.id}
+                            type="button"
+                            className={`finish-card-btn ${stickerBase === b.id ? 'active' : ''}`}
+                            onClick={() => setStickerBase(b.id)}
+                          >
+                            <span className="finish-name">{b.name}</span>
+                            <span className="finish-desc">{b.desc}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Crucial Sticker Sheet Yield Notice */}
+                    <div className="sticker-yield-note">
+                      <Info size={16} />
+                      <span>
+                        <strong>Important:</strong> 1 sheet me kitne stickers aayenge yeh aapke brand logo ke size aur shape par depend karta hai.
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* ======================================================
+                    5. ARTISANAL WOODEN STAMPS (Flat Hardwood Mount, No Handle)
+                    ====================================================== */}
+                {selectedProduct === 'stamps' && (
+                  <div className="product-configurator-block">
+                    <div className="product-spec-callout">
+                      <div className="callout-badge-row">
+                        <span className="spec-highlight-pill">FLAT HARDWOOD BLOCK</span>
+                        <span className="spec-highlight-pill accent">NO HANDLE / KNOB</span>
+                        <span className="spec-highlight-pill">5 SIZES AVAILABLE</span>
+                      </div>
+                      <p className="callout-desc">
+                        Mounted on a sleek flat hardwood block (streamlined modern design without tall handles). Laser micro-engraved for crisp impressions.
+                      </p>
+                    </div>
+
+                    {/* Stamp Sizes */}
+                    <div className="form-group">
+                      <div className="form-label-row">
+                        <label className="form-label">Stamp Block Size</label>
+                        <span className="form-sub-hint">2×2, 3×3, 4×4, 3×6, 6×7</span>
+                      </div>
+                      <div className="sizes-toggle-grid">
+                        {STAMP_SIZES.map((s) => (
+                          <button
+                            key={s.id}
+                            type="button"
+                            className={`size-card-btn ${stampSize === s.id ? 'active' : ''}`}
+                            onClick={() => setStampSize(s.id)}
+                          >
+                            <span className="size-title">{s.name}</span>
+                            <span className="size-desc">{s.desc}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Ink Pad Colors */}
+                    <div className="form-group">
+                      <div className="form-label-row">
+                        <label className="form-label">Ink Pad Selection</label>
+                        <span className="form-sub-hint">Black, Red, Green, or Stamp Only</span>
+                      </div>
+                      <div className="inkpad-toggle-grid">
+                        {INK_PADS.map((i) => (
+                          <button
+                            key={i.id}
+                            type="button"
+                            className={`color-swatch-btn ${inkPadColor === i.id ? 'active' : ''}`}
+                            onClick={() => setInkPadColor(i.id)}
+                          >
+                            <span
+                              className="swatch-circle"
+                              style={{ backgroundColor: i.color }}
+                            />
+                            <span className="swatch-label">{i.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ======================================================
+                    6. PAPER BAGS GSM SELECTION
+                    ====================================================== */}
                 {selectedProduct === 'paper-bags' && (
                   <div className="form-group gsm-selection-group">
                     <div className="form-label-row">
                       <label className="form-label">Select Paper GSM (Thickness / Weight)</label>
-                      <span className="form-sub-hint">Craft 140 GSM, White 120 GSM, Superior 250–300 GSM</span>
+                      <span className="form-sub-hint">Kraft 140 GSM, White 120 GSM, Superior 250–300 GSM</span>
                     </div>
                     <div className="gsm-cards-grid">
                       {GSM_OPTIONS.map((g) => {
@@ -345,8 +702,8 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                   </div>
                 )}
 
-                {/* Customization Choice (For Custom Boxes, Paper Bags, etc.) */}
-                {selectedProduct !== 'business-cards' && (
+                {/* Customization Choice (For Custom Boxes, Paper Bags) */}
+                {(selectedProduct === 'custom-boxes' || selectedProduct === 'paper-bags') && (
                   <div className="form-group">
                     <div className="form-label-row">
                       <label className="form-label">Branding &amp; Customization</label>
@@ -355,13 +712,9 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                           ? customizationType === 'with-logo'
                             ? '★ Min. 100 units for logo box'
                             : 'Min. 50 units for plain box'
-                          : selectedProduct === 'paper-bags'
-                          ? customizationType === 'with-logo'
-                            ? '★ Min. 500 units for logo bag'
-                            : 'Min. 250 units for plain bag'
                           : customizationType === 'with-logo'
-                          ? 'Min. 500 units with logo'
-                          : 'Plain unprinted'}
+                          ? '★ Min. 500 units for logo bag'
+                          : 'Min. 250 units for plain bag'}
                       </span>
                     </div>
                     <div className="customization-toggle-grid">
@@ -375,11 +728,7 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                         <div className="card-btn-header">
                           <span className="card-btn-title">Plain / Unprinted</span>
                           <span className="card-btn-moq-tag">
-                            {selectedProduct === 'custom-boxes'
-                              ? 'Min. 50 Units'
-                              : selectedProduct === 'paper-bags'
-                              ? 'Min. 250 Units'
-                              : 'Min. 100 Units'}
+                            {selectedProduct === 'custom-boxes' ? 'Min. 50 Units' : 'Min. 250 Units'}
                           </span>
                         </div>
                         <p className="card-btn-desc">
@@ -397,11 +746,7 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                         <div className="card-btn-header">
                           <span className="card-btn-title">With Logo &amp; Full Customization</span>
                           <span className="card-btn-moq-tag highlight">
-                            {selectedProduct === 'custom-boxes'
-                              ? 'Min. 100 Units'
-                              : selectedProduct === 'paper-bags'
-                              ? 'Min. 500 Units'
-                              : 'Min. 250 Units'}
+                            {selectedProduct === 'custom-boxes' ? 'Min. 100 Units' : 'Min. 500 Units'}
                           </span>
                         </div>
                         <p className="card-btn-desc">
@@ -412,10 +757,46 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                   </div>
                 )}
 
+                {/* Artwork / Logo Upload Option (JPG, PNG, PDF, SVG, AI) */}
+                <div className="form-group">
+                  <div className="form-label-row">
+                    <label className="form-label">Upload Brand Logo / Artwork (Optional)</label>
+                    <span className="form-sub-hint">JPG, PNG, PDF, SVG, AI accepted</span>
+                  </div>
+                  {uploadedArtwork ? (
+                    <div className="upload-file-chip">
+                      <FileText size={16} color="#D5683F" />
+                      <span>{uploadedArtwork.name} ({uploadedArtwork.size})</span>
+                      <button
+                        type="button"
+                        className="remove-file-btn"
+                        onClick={() => setUploadedArtwork(null)}
+                        aria-label="Remove uploaded file"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="artwork-upload-dropzone">
+                      <input
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.pdf,.svg,.ai"
+                        onChange={handleFileUpload}
+                        style={{ display: 'none' }}
+                      />
+                      <div className="upload-icon-circle">
+                        <UploadCloud size={20} strokeWidth={2.2} />
+                      </div>
+                      <span className="upload-text-main">Click or drag logo file here</span>
+                      <span className="upload-text-sub">JPG, PNG, PDF, SVG, or AI (Max 25MB)</span>
+                    </label>
+                  )}
+                </div>
+
                 {/* Quantity Select */}
                 <div className="form-group">
                   <div className="form-label-row">
-                    <label className="form-label">Estimated Quantity</label>
+                    <label className="form-label">Order Quantity</label>
                     {selectedProduct === 'custom-boxes' && (
                       <span className="moq-alert-pill">
                         {customizationType === 'with-logo' ? 'Boxes With Logo: Starts from 100 units' : 'Plain Boxes: Starts from 50 units'}
@@ -428,7 +809,22 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                     )}
                     {selectedProduct === 'business-cards' && (
                       <span className="moq-alert-pill">
-                        Premium Cards: Starts from 100 units
+                        Premium Cards: MOQ 200, 300, 1,000, 2,000
+                      </span>
+                    )}
+                    {selectedProduct === 'stickers' && (
+                      <span className="moq-alert-pill">
+                        Sticker Sheets: 5, 10, 25, 50, 100+ Sheets
+                      </span>
+                    )}
+                    {selectedProduct === 'tags' && (
+                      <span className="moq-alert-pill">
+                        Custom Tags: Starts from 250 units
+                      </span>
+                    )}
+                    {selectedProduct === 'stamps' && (
+                      <span className="moq-alert-pill">
+                        Artisanal Stamps: Starts from 1 piece
                       </span>
                     )}
                   </div>
@@ -440,7 +836,7 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                         className={`pill-option-btn ${quantity === qty ? 'active' : ''}`}
                         onClick={() => setQuantity(qty)}
                       >
-                        {qty} {selectedProduct === 'business-cards' ? 'cards' : 'units'}
+                        {qty} {selectedProduct === 'business-cards' ? 'cards' : selectedProduct === 'stickers' ? '' : selectedProduct === 'stamps' ? 'stamps' : 'units'}
                       </button>
                     ))}
                   </div>
@@ -454,10 +850,10 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                   </div>
                   <ul className="notice-points-list">
                     <li>
-                      <strong>Design Charges:</strong> ₹1,000 (One-time charge for all customized artwork, vector setup &amp; proofing).
+                      <strong>Design Charges:</strong> ₹1,000 (One-time charge for customized artwork, vector setup &amp; proofing).
                     </li>
                     <li>
-                      <strong>Custom / New Size:</strong> If a new custom size is required, a first-time die (die-making) charge is applicable.
+                      <strong>Custom / New Size:</strong> If a new custom size or shape die is required, a first-time die charge is applicable.
                     </li>
                   </ul>
                 </div>
@@ -549,7 +945,7 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                     />
                   </div>
                   <div className="form-field">
-                    <label className="field-label">Dimensions / Size</label>
+                    <label className="field-label">Dimensions / Size Notes</label>
                     <input
                       type="text"
                       placeholder="Standard or Custom (e.g. 8x5x3 in)"
@@ -569,22 +965,22 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                 <div className="form-field">
                   <label className="field-label">Additional Custom Specifications (Optional)</label>
                   <textarea
-                    rows={2}
-                    placeholder="e.g. Special finish requirements, logo placement, delivery preferences..."
+                    rows={3}
+                    placeholder="Any specific requests, Pantone codes, unboxing requirements, or deadline..."
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     className="form-textarea"
                   />
                 </div>
 
-                {/* Form Footer */}
+                {/* Modal Footer Actions */}
                 <div className="modal-actions-footer">
                   <div className="modal-trust-note">
-                    <span>✓ Home Delivery</span>
-                    <span>✓ Pan-India Delivery</span>
+                    <span>⚡ Quick response in 2 hrs</span>
+                    <span>📦 Free digital 3D mockup</span>
                   </div>
                   <button type="submit" className="btn-quote-primary">
-                    <span>Request Quotation</span>
+                    <span>Submit Request</span>
                     <ArrowUpRight size={18} strokeWidth={2.4} />
                   </button>
                 </div>

@@ -2144,6 +2144,208 @@ body::before {
   line-height: 1.2;
 }
 
+.shape-visual-icon.shape-oval {
+  width: 26px;
+  height: 18px;
+  border-radius: 50% / 40%;
+}
+
+.shape-visual-icon.shape-custom {
+  width: 22px;
+  height: 22px;
+  border-radius: 9px 3px 9px 3px;
+  border-style: dashed;
+}
+
+/* Color Swatches Grid */
+.colors-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+  gap: 8px;
+}
+
+.color-swatch-btn {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.color-swatch-btn:hover {
+  border-color: var(--color-accent);
+  background-color: var(--bg-surface-elevated);
+}
+
+.color-swatch-btn.active {
+  border-color: var(--color-accent);
+  background-color: rgba(213, 104, 63, 0.06);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+.swatch-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.swatch-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Stamp Sizes Grid */
+.sizes-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+}
+
+.size-card-btn {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: all 0.2s ease;
+}
+
+.size-card-btn:hover {
+  border-color: var(--color-accent);
+  background-color: var(--bg-surface-elevated);
+}
+
+.size-card-btn.active {
+  border-color: var(--color-accent);
+  background-color: rgba(213, 104, 63, 0.06);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+.size-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.size-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Ink Pad Swatches */
+.inkpad-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+  gap: 8px;
+}
+
+/* Sticker Yield Note */
+.sticker-yield-note {
+  background: rgba(213, 104, 63, 0.08);
+  border: 1px solid rgba(213, 104, 63, 0.22);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-top: 4px;
+}
+
+.sticker-yield-note svg {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+/* Artwork Upload Dropzone */
+.artwork-upload-dropzone {
+  border: 2px dashed rgba(73, 41, 29, 0.2);
+  border-radius: 12px;
+  padding: 18px 16px;
+  text-align: center;
+  background-color: rgba(250, 247, 242, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.artwork-upload-dropzone:hover {
+  border-color: var(--color-accent);
+  background-color: rgba(213, 104, 63, 0.04);
+}
+
+.artwork-upload-dropzone.has-file {
+  border-color: var(--color-accent);
+  background-color: #FFFFFF;
+}
+
+.upload-icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(213, 104, 63, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+}
+
+.upload-text-main {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.upload-text-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.upload-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(73, 41, 29, 0.08);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.remove-file-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #DC2626;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
 @media (max-width: 640px) {
   .customization-toggle-grid {
     grid-template-columns: 1fr;
@@ -2152,8 +2354,11 @@ body::before {
     grid-template-columns: 1fr;
   }
   .shapes-toggle-grid,
-  .finishes-toggle-grid {
-    grid-template-columns: 1fr;
+  .finishes-toggle-grid,
+  .colors-toggle-grid,
+  .sizes-toggle-grid,
+  .inkpad-toggle-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
