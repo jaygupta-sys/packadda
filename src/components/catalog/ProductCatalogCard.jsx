@@ -20,10 +20,9 @@ export default function ProductCatalogCard({ product, onEnquire }) {
 
       {/* Card Content */}
       <div className="card-body-content">
-        {/* Number & Category Row */}
+        {/* Number Row */}
         <div className="card-meta-top">
           <span className="card-index-num">{product.number}</span>
-          <span className="card-category-pill">{product.category}</span>
         </div>
 
         {/* Title */}
