@@ -40,6 +40,13 @@ export default function HeroNavbar({ onOpenQuote }) {
                 <a
                   href={link.href}
                   className={`navbar-nav-link ${link.active ? 'active' : ''}`}
+                  onClick={() => {
+                    if (link.href === '#work') {
+                      setTimeout(() => {
+                        window.dispatchEvent(new CustomEvent('packadda-trigger-work-animation'));
+                      }, 100);
+                    }
+                  }}
                 >
                   {link.name}
                   {link.active && (
@@ -101,7 +108,14 @@ export default function HeroNavbar({ onOpenQuote }) {
                       <a
                         href={link.href}
                         className={`mobile-nav-link ${link.active ? 'active' : ''}`}
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          if (link.href === '#work') {
+                            setTimeout(() => {
+                              window.dispatchEvent(new CustomEvent('packadda-trigger-work-animation'));
+                            }, 150);
+                          }
+                        }}
                       >
                         {link.name}
                       </a>

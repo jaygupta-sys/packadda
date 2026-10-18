@@ -1996,6 +1996,91 @@ body::before {
   margin-right: 4px;
 }
 
+/* Quote Success WhatsApp Direct Forwarding Styles */
+.quote-whatsapp-notice-banner {
+  background: rgba(37, 211, 102, 0.08);
+  border: 1px solid rgba(37, 211, 102, 0.28);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 12px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+}
+
+.wa-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wa-banner-text strong {
+  display: block;
+  font-size: 13px;
+  color: #128C7E;
+  line-height: 1.25;
+}
+
+.wa-banner-text span {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.quote-success-actions-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.btn-whatsapp-quote-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 9999px;
+  background: #25D366;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  font-size: 14.5px;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+  transition: all 0.25s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-whatsapp-quote-submit:hover {
+  background: #20BD5A;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45);
+  color: #FFFFFF !important;
+}
+
+.btn-quote-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-medium);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-quote-secondary:hover {
+  background: rgba(73, 41, 29, 0.04);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
 /* Product Spec Callout Banner */
 .product-spec-callout {
   background: linear-gradient(135deg, rgba(73, 41, 29, 0.05), rgba(213, 104, 63, 0.07));

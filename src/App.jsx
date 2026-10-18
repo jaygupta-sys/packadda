@@ -1,6 +1,7 @@
 import React from 'react';
 import Hero from './components/Hero';
 import ProductsCatalog from './components/catalog/ProductsCatalog';
+import OurWorkShowcase from './components/work/OurWorkShowcase';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -8,6 +9,7 @@ export default function App() {
     <main className="app-root">
       <Hero />
       <ProductsCatalog />
+      <OurWorkShowcase />
       <Footer />
     </main>
   );

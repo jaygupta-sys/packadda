@@ -29,7 +29,7 @@ export default function Hero() {
   };
 
   const handleExploreWork = () => {
-    const el = document.getElementById('products');
+    const el = document.getElementById('work') || document.getElementById('products');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }

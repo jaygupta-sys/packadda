@@ -11,7 +11,8 @@ import {
   Trash2,
   Sparkles,
   Layers,
-  HelpCircle
+  HelpCircle,
+  MessageCircle
 } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 
@@ -213,22 +214,100 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
-
-  const handleReset = () => {
-    setSubmitted(false);
-    onClose();
-  };
-
   const activeProductData = PRODUCTS.find((p) => p.id === selectedProduct);
   const activeGsmData = GSM_OPTIONS.find((g) => g.id === selectedGsm);
   const activeBoxColor = BOX_COLORS.find((c) => c.id === boxColor);
   const activeStickerBase = STICKER_BASES.find((b) => b.id === stickerBase);
   const activeStampSize = STAMP_SIZES.find((s) => s.id === stampSize);
   const activeInkPad = INK_PADS.find((i) => i.id === inkPadColor);
+
+  const getWhatsAppMessage = () => {
+    const specsList = [];
+
+    if (selectedProduct === 'custom-boxes') {
+      specsList.push(`• *Box Type:* Tuck-in Corrugated (250 GSM)`);
+      specsList.push(`• *Color:* ${activeBoxColor?.name || 'Plain Brown'}`);
+      specsList.push(
+        `• *Branding:* ${customizationType === 'with-logo' ? 'With Logo Printing' : 'Plain (Without Logo)'}`
+      );
+    } else if (selectedProduct === 'business-cards') {
+      specsList.push(`• *Card:* Premium 350 GSM Board`);
+      specsList.push(`• *Shape:* ${cardShape}`);
+      specsList.push(`• *Finish:* ${cardFinish}`);
+    } else if (selectedProduct === 'tags') {
+      specsList.push(`• *Tag Shape:* ${tagShape}`);
+      specsList.push(`• *Style:* Pre-Punched Hole (Without Rope)`);
+    } else if (selectedProduct === 'stickers') {
+      specsList.push(`• *Format:* Rectangle Sheet Format`);
+      specsList.push(`• *Shape:* ${stickerShape}`);
+      specsList.push(`• *Base Material:* ${activeStickerBase?.name || 'White Base Waterproof'}`);
+    } else if (selectedProduct === 'stamps') {
+      specsList.push(`• *Stamp Size:* ${activeStampSize?.name || '3" × 3"'}`);
+      specsList.push(`• *Mount:* Minimalist Flat Hardwood (No Handle)`);
+      specsList.push(`• *Ink Pad:* ${activeInkPad?.name || 'Stamp Only (No Ink)'}`);
+    } else if (selectedProduct === 'paper-bags') {
+      specsList.push(
+        `• *Paper Quality:* ${activeGsmData ? `${activeGsmData.name} (${activeGsmData.gsm})` : '140 GSM Kraft'}`
+      );
+      specsList.push(
+        `• *Branding:* ${customizationType === 'with-logo' ? 'With Logo Printing' : 'Plain (Without Logo)'}`
+      );
+    }
+
+    const unitLabel =
+      selectedProduct === 'stickers'
+        ? 'Sheets'
+        : selectedProduct === 'business-cards'
+        ? 'cards'
+        : 'units';
+
+    const artworkDetail = uploadedArtwork
+      ? `• *Artwork File:* ${uploadedArtwork.name} (${uploadedArtwork.size})\n  _(Note: Please share this artwork image in this WhatsApp chat)_`
+      : `• *Artwork:* Not attached yet (will share via WhatsApp)`;
+
+    return (
+      `📦 *NEW BESPOKE PACKAGING QUOTE REQUEST* — *PACK ADDA*\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+      `👤 *CUSTOMER DETAILS:*\n` +
+      `• *Name:* ${formData.name || 'Not provided'}\n` +
+      `• *Phone / WhatsApp:* ${formData.phone || 'Not provided'}\n` +
+      `• *Work Email:* ${formData.email || 'Not provided'}\n` +
+      (formData.company ? `• *Company / Brand:* ${formData.company}\n` : '') +
+      `• *Delivery PIN:* ${formData.pincode || 'Not provided'}\n` +
+      `• *Delivery Address:* ${formData.address || 'Not provided'}\n\n` +
+      `📋 *PACKAGING SPECIFICATIONS:*\n` +
+      `• *Product:* ${activeProductData?.title || 'Custom Packaging'}\n` +
+      specsList.join('\n') + '\n' +
+      `• *Quantity Required:* ${quantity} ${unitLabel}\n` +
+      `${artworkDetail}\n` +
+      (formData.notes ? `\n📝 *Notes / Custom Dimensions:*\n${formData.notes}\n` : '') +
+      `\n━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `⚡ *Inquiry submitted via Pack Adda Website*`
+    );
+  };
+
+  const getWhatsAppUrl = () => {
+    const text = encodeURIComponent(getWhatsAppMessage());
+    return `https://wa.me/919915510065?text=${text}`;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+
+    // Auto-open WhatsApp with the compiled quotation details
+    const waUrl = getWhatsAppUrl();
+    try {
+      window.open(waUrl, '_blank');
+    } catch (err) {
+      console.log('WhatsApp auto-redirect handled:', err);
+    }
+  };
+
+  const handleReset = () => {
+    setSubmitted(false);
+    onClose();
+  };
 
   return (
     <AnimatePresence>
@@ -265,11 +344,11 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                   animate={{ scale: 1 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                 >
-                  <CheckCircle2 size={56} color="#D5683F" strokeWidth={1.8} />
+                  <CheckCircle2 size={56} color="#25D366" strokeWidth={1.8} />
                 </motion.div>
-                <h3>Quote Request Received!</h3>
+                <h3>Quote Request Ready!</h3>
                 <p>
-                  Thank you for connecting with <strong>PACK ADDA</strong>. Our packaging specialists will review your specs and send your quotation &amp; design confirmation within 2 hours.
+                  Thank you for connecting with <strong>PACK ADDA</strong>! We have prepared your complete packaging specifications. Tap below to send them directly to our owner/specialist on WhatsApp for instant pricing &amp; dieline confirmation within 2 hours.
                 </p>
                 <div className="quote-submitted-summary">
                   <div className="summary-pill">
@@ -369,13 +448,36 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                     <span>Delivery PIN:</span> <strong>{formData.pincode}</strong>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  className="btn-quote-primary"
-                  onClick={handleReset}
-                >
-                  <span>Back to Homepage</span>
-                </button>
+                <div className="quote-whatsapp-notice-banner">
+                  <div className="wa-banner-left">
+                    <MessageCircle size={22} color="#25D366" />
+                    <div className="wa-banner-text">
+                      <strong>Direct WhatsApp Forwarding to Owner</strong>
+                      <span>Official WhatsApp: +91 99155 10065 (Pack Adda Specialists)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="quote-success-actions-row">
+                  <a
+                    href={getWhatsAppUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-whatsapp-quote-submit"
+                  >
+                    <MessageCircle size={19} />
+                    <span>Send All Details to Owner on WhatsApp</span>
+                    <ArrowUpRight size={17} strokeWidth={2.4} />
+                  </a>
+
+                  <button
+                    type="button"
+                    className="btn-quote-secondary"
+                    onClick={handleReset}
+                  >
+                    <span>Back to Homepage</span>
+                  </button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="quote-modal-form">
@@ -980,7 +1082,8 @@ export default function QuoteModal({ isOpen, onClose, initialProduct = null }) {
                     <span>📦 Free digital 3D mockup</span>
                   </div>
                   <button type="submit" className="btn-quote-primary">
-                    <span>Submit Request</span>
+                    <MessageCircle size={18} style={{ marginRight: 6 }} />
+                    <span>Submit & Send on WhatsApp</span>
                     <ArrowUpRight size={18} strokeWidth={2.4} />
                   </button>
                 </div>
