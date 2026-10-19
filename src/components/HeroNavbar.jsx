@@ -6,6 +6,7 @@ import { NAV_LINKS } from '../data/products';
 export default function HeroNavbar({ onOpenQuote }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeHref, setActiveHref] = useState('#');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +14,35 @@ export default function HeroNavbar({ onOpenQuote }) {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = [
+      { id: 'hero', href: '#' },
+      { id: 'products', href: '#products' },
+      { id: 'work', href: '#work' },
+      { id: 'contact', href: '#contact' },
+      { id: 'footer', href: '#about' }
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const match = sections.find((s) => s.id === entry.target.id);
+            if (match) setActiveHref(match.href);
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    sections.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -35,30 +65,41 @@ export default function HeroNavbar({ onOpenQuote }) {
         {/* Center: Desktop Navigation Links */}
         <nav className="navbar-nav desktop-only" aria-label="Primary Navigation">
           <ul className="navbar-nav-list">
-            {NAV_LINKS.map((link) => (
-              <li key={link.name} className="navbar-nav-item">
-                <a
-                  href={link.href}
-                  className={`navbar-nav-link ${link.active ? 'active' : ''}`}
-                  onClick={() => {
-                    if (link.href === '#work') {
-                      setTimeout(() => {
-                        window.dispatchEvent(new CustomEvent('packadda-trigger-work-animation'));
-                      }, 100);
-                    }
-                  }}
-                >
-                  {link.name}
-                  {link.active && (
-                    <motion.span
-                      className="nav-active-pill"
-                      layoutId="activeNavIndicator"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </a>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive = activeHref === link.href;
+              return (
+                <li key={link.name} className="navbar-nav-item">
+                  <a
+                    href={link.href}
+                    className={`navbar-nav-link ${isActive ? 'active' : ''}`}
+                    onClick={(e) => {
+                      setActiveHref(link.href);
+                      if (link.href === '#work') {
+                        setTimeout(() => {
+                          window.dispatchEvent(new CustomEvent('packadda-trigger-work-animation'));
+                        }, 100);
+                      }
+                      if (link.href.startsWith('#') && link.href.length > 1) {
+                        const targetEl = document.querySelector(link.href);
+                        if (targetEl) {
+                          e.preventDefault();
+                          targetEl.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }
+                    }}
+                  >
+                    {link.name}
+                    {isActive && (
+                      <motion.span
+                        className="nav-active-pill"
+                        layoutId="activeNavIndicator"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -103,24 +144,35 @@ export default function HeroNavbar({ onOpenQuote }) {
             <div className="mobile-menu-inner">
               <nav aria-label="Mobile Navigation">
                 <ul className="mobile-nav-list">
-                  {NAV_LINKS.map((link) => (
-                    <li key={link.name}>
-                      <a
-                        href={link.href}
-                        className={`mobile-nav-link ${link.active ? 'active' : ''}`}
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          if (link.href === '#work') {
-                            setTimeout(() => {
-                              window.dispatchEvent(new CustomEvent('packadda-trigger-work-animation'));
-                            }, 150);
-                          }
-                        }}
-                      >
-                        {link.name}
-                      </a>
-                    </li>
-                  ))}
+                  {NAV_LINKS.map((link) => {
+                    const isActive = activeHref === link.href;
+                    return (
+                      <li key={link.name}>
+                        <a
+                          href={link.href}
+                          className={`mobile-nav-link ${isActive ? 'active' : ''}`}
+                          onClick={(e) => {
+                            setMobileMenuOpen(false);
+                            setActiveHref(link.href);
+                            if (link.href === '#work') {
+                              setTimeout(() => {
+                                window.dispatchEvent(new CustomEvent('packadda-trigger-work-animation'));
+                              }, 150);
+                            }
+                            if (link.href.startsWith('#') && link.href.length > 1) {
+                              const targetEl = document.querySelector(link.href);
+                              if (targetEl) {
+                                e.preventDefault();
+                                targetEl.scrollIntoView({ behavior: 'smooth' });
+                              }
+                            }
+                          }}
+                        >
+                          {link.name}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </nav>
 
